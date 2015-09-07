@@ -22,4 +22,6 @@ void _checkFail(const char *f, const uint l, char *c);
 #define CHECK(c)
 #endif
 
+#define DEFAULT_STRLEN (65)
+
 #endif // FIDDLE_H_
