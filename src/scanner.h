@@ -21,7 +21,27 @@ typedef enum {
 
 typedef struct {
     uchar type;
-    char *value
+    union {
+        char *val_str;
+        int val_int;
+    };
 } Token;
+
+typedef struct {
+    char cur;
+    char *source;
+    uint nextPos;
+    uint line;
+    uint col;
+    bool done;
+    uint length;
+    Vec tokenStream;
+} Scanner;
+
+void scanner_init(Scanner *s, char *source, uint length);
+void scanner_free(Scanner *s);
+
+void scanSingle(Scanner *s);
+void scanAll(Scanner *s);
 
 #endif // FIDDLE_SCANNER_H_
