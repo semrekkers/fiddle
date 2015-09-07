@@ -26,7 +26,7 @@ void vec_init(Vec *v, uint itemSize, uint cap) {
     v->cap = cap;
 }
 
-void vec_destroy(Vec *v) {
+void vec_free(Vec *v) {
     CHECK(v);
     free(v->data);
 }
