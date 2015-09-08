@@ -28,7 +28,7 @@ void freeNode(AstNode *node) {;
 
 static inline Token peek(Parser *p, int i) {
     uint pos = (uint)(p->pos + i);
-    return *((Token*)vec_at(p->tokenStream, pos));
+    return *((Token*)vec_at(&p->tokenStream, pos));
 }
 
 static void consume(Parser *p) {
