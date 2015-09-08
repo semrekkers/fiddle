@@ -3,7 +3,7 @@
 
 CC=gcc
 
-CFLAGS=-c -g -Wall -Wextra -O2
+CFLAGS=-c -g -Wall -Wextra -DDEBUG -O2
 
 default: all
 
