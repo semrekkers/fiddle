@@ -5,8 +5,6 @@ CC=gcc
 
 CFLAGS=-c -g -Wall -Wextra -DDEBUG -O2
 
-default: all
-
 %.o: %.c fiddle.h
 	$(CC) $(CFLAGS) -o $@ $<
 

@@ -1,7 +1,8 @@
 # Root Makefile
 # check src/Makefile for the actual file
 
-default: all
+all:
+	cd src && $(MAKE) $@
 
 %:
 	cd src && $(MAKE) $@
