@@ -1,0 +1,6 @@
+# Fiddle git ignore
+
+# build output
+*.o
+*.out
+*.a
