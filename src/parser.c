@@ -25,3 +25,23 @@ AstNode* newNode(AstNodeType type) {
 void freeNode(AstNode *node) {;
     free(node);
 }
+
+static inline Token peek(Parser *p, int i) {
+    uint pos = (uint)(p->pos + i);
+    return *((Token*)vec_at(p->tokenStream, pos));
+}
+
+static void consume(Parser *p) {
+    p->pos++;
+    p->cur = peek(p, 0);
+}
+
+void parser_init(Parser *p, Scanner *s) {
+    CHECK(p);
+    CHECK(s);
+    CHECK(s->tokenStream.length);
+    p->pos = 0;
+    p->root = NULL;
+    p->tokenStream = s->tokenStream;
+    p->cur = peek(p, 0);
+}

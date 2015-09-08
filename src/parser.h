@@ -17,7 +17,9 @@ AstNode* newNode(AstNodeType type);
 void freeNode(AstNode *node);
 
 void parser_init(Parser *p, Scanner *s);
-void parser_free(Parser *p);
+
+// placeholder
+#define parser_free(p)
 
 void parseAll(Parser *p);
 
