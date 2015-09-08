@@ -5,10 +5,12 @@ CC=gcc
 
 CFLAGS=-c -g -Wall -Wextra -DDEBUG -O2
 
+OBJS=utils.o vector.o scanner.o parser.o
+
 %.o: %.c fiddle.h
 	$(CC) $(CFLAGS) -o $@ $<
 
-all: vector.o scanner.o
+all: $(OBJS)
 	@echo "Done!"
 
 .PHONY: all
@@ -19,5 +21,7 @@ clean:
 .PHONY: clean
 
 # Dependencies
+utils.o: utils.c
 vector.o: vector.h vector.c
-scanner.o: scanner.h scanner.c
+scanner.o: vector.h scanner.h scanner.c
+parser.o: vector.h scanner.h ast.h parser.h parser.c
