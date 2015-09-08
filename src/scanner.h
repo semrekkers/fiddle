@@ -4,7 +4,7 @@
 #include "fiddle.h"
 #include "vector.h"
 
-typedef enum {
+enum {
     TOK_ILLEGAL = 0,
     TOK_EOF,
 
@@ -17,11 +17,16 @@ typedef enum {
     TOK_DIV,            // /
     TOK_REM,            // %
 
+    TOK_LPAREN,         // (
+    TOK_RPAREN,         // )
+
     TOK_ASSIGN          // =
-} TokenType;
+};
+
+typedef uchar TokenType;
 
 typedef struct {
-    uchar type;
+    TokenType type;
     union {
         char *val_str;
         int val_int;
@@ -44,5 +49,34 @@ void scanner_free(Scanner *s);
 
 void scanSingle(Scanner *s);
 void scanAll(Scanner *s);
+
+// helper functions
+static inline bool isNum(char c) {
+    return '0' <= c && c <= '9';
+}
+
+static inline bool isLower(char c) {
+    return 'a' <= c && c <= 'z';
+}
+
+static inline bool isUpper(char c) {
+    return 'A' <= c && c <= 'Z';
+}
+
+static inline bool isAlpha(char c) {
+    return isLower(c) || isUpper(c);
+}
+
+static inline bool isAplhaNum(char c) {
+    return isAlpha(c) || isNum(c);
+}
+
+static inline bool isIdent(char c) {
+    return isAplhaNum(c) || c == '_';
+}
+
+static inline bool isSpace(char c) {
+    return c == ' ' || c == '\t' || c == '\n';
+}
 
 #endif // FIDDLE_SCANNER_H_

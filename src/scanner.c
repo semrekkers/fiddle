@@ -1,33 +1,5 @@
 #include "scanner.h"
 
-static inline bool isNum(char c) {
-    return '0' <= c && c <= '9';
-}
-
-static inline bool isLower(char c) {
-    return 'a' <= c && c <= 'z';
-}
-
-static inline bool isUpper(char c) {
-    return 'A' <= c && c <= 'Z';
-}
-
-static inline bool isAlpha(char c) {
-    return isLower(c) || isUpper(c);
-}
-
-static inline bool isAplhaNum(char c) {
-    return isAlpha(c) || isNum(c);
-}
-
-static inline bool isIdent(char c) {
-    return isAplhaNum(c) || c == '_';
-}
-
-static inline bool isSpace(char c) {
-    return c == ' ' || c == '\t' || c == '\n';
-}
-
 static void next(Scanner *s) {
     if (s->done) {
         PANIC("illegal next");
@@ -103,7 +75,7 @@ void scanner_free(Scanner *s) {
 void scanSingle(Scanner *s) {
     CHECK(s);
     skipWhitespaces(s);
-    
+
     Token tok;
     tok.type = TOK_ILLEGAL;
     tok.val_str = NULL;
@@ -123,6 +95,12 @@ void scanSingle(Scanner *s) {
             break;
         case '%':
             tok.type = TOK_REM;
+            break;
+        case '(':
+            tok.type = TOK_LPAREN;
+            break;
+        case ')':
+            tok.type = TOK_RPAREN;
             break;
 
         case '=':
