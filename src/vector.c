@@ -18,7 +18,7 @@ static inline void expand(Vec *v, uint req) {
 
 void vec_init(Vec *v, uint itemSize, uint cap) {
     CHECK(v);
-    uint t = itemSize * len;
+    uint t = itemSize * cap;
     v->data = malloc(t);
     CHECK(v->data);
     v->isize = itemSize;
