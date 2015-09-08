@@ -2,6 +2,7 @@
 #define FIDDLE_SCANNER_H_
 
 #include "fiddle.h"
+#include "vector.h"
 
 typedef enum {
     TOK_ILLEGAL = 0,
