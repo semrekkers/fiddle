@@ -39,9 +39,6 @@ static void next(Scanner *s) {
         s->col = 0;
     }
     s->col++;
-    if (s->nextPos >= s->length) {
-        s->done = true;
-    }
 }
 
 static void skipWhitespaces(Scanner *s) {
@@ -101,4 +98,61 @@ void scanner_init(Scanner *s, char *source, uint length) {
 void scanner_free(Scanner *s) {
     CHECK(s);
     vec_free(&s->tokenStream);
+}
+
+void scanSingle(Scanner *s) {
+    CHECK(s);
+    skipWhitespaces(s);
+    
+    Token tok;
+    tok.type = TOK_ILLEGAL;
+    tok.val_str = NULL;
+
+    switch (s->cur) {
+        case '+':
+            tok.type = TOK_ADD;
+            break;
+        case '-':
+            tok.type = TOK_SUB;
+            break;
+        case '*':
+            tok.type = TOK_MUL;
+            break;
+        case '/':
+            tok.type = TOK_DIV;
+            break;
+        case '%':
+            tok.type = TOK_REM;
+            break;
+
+        case '=':
+            tok.type = TOK_ASSIGN;
+            break;
+
+        case '\0':
+            tok.type = TOK_EOF;
+            s->done = true;
+            break;
+
+        default:
+            if (isNum(s->cur)) {
+                scanInt(s);
+                return;
+            }
+            else if (isIdent(s->cur)) {
+                scanIdent(s);
+                return;
+            }
+            else {
+                PANIC("illegal token");
+            }
+            break;
+    }
+    addToken(s, &tok);
+}
+
+void scanAll(Scanner *s) {
+    while (!s->done) {
+        scanSingle(s);
+    }
 }
