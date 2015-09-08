@@ -1,0 +1,7 @@
+# Fiddle travis file
+# Just for testing
+
+language: c
+compiler: gcc
+
+script: make
