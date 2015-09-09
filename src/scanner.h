@@ -16,11 +16,10 @@ enum {
     TOK_MUL,            // *
     TOK_DIV,            // /
     TOK_REM,            // %
+    TOK_ASSIGN,         // =
 
     TOK_LPAREN,         // (
-    TOK_RPAREN,         // )
-
-    TOK_ASSIGN          // =
+    TOK_RPAREN          // )
 };
 
 typedef uchar TokenType;
@@ -77,6 +76,26 @@ static inline bool isIdent(char c) {
 
 static inline bool isSpace(char c) {
     return c == ' ' || c == '\t' || c == '\n';
+}
+
+static inline bool isIllegal(Token tok) {
+    return !tok.type;
+}
+
+static inline bool isEof(Token tok) {
+    return tok.type == TOK_EOF;
+}
+
+static inline bool isLiteral(Token tok) {
+    return TOK_IDENT <= tok.type && tok.type <= TOK_INT;
+}
+
+static inline bool isOperator(Token tok) {
+    return TOK_ADD <= tok.type && tok.type <= TOK_ASSIGN;
+}
+
+static inline bool isDelimiter(Token tok) {
+    return TOK_LPAREN <= tok.type && tok.type <= TOK_RPAREN;
 }
 
 #endif // FIDDLE_SCANNER_H_
