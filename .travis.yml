@@ -4,4 +4,7 @@
 language: c
 compiler: gcc
 
+notifications:
+    email: false
+
 script: make
