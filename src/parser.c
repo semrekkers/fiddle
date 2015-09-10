@@ -27,16 +27,6 @@ void freeNode(AstNode *node) {;
     free(node);
 }
 
-OpPrec getOpPrec(TokenType t) {
-    // TODO: ?
-    if (TOK_MUL <= t && t <= TOK_REM) {
-        return 2;
-    }
-    else if (TOK_ADD <= t && t <= TOK_SUB) {
-        return 1;
-    }
-}
-
 static inline Token peek(Parser *p, int i) {
     uint pos = (uint)(p->pos + i);
     return *((Token*)vec_at(&p->tokenStream, pos));
@@ -45,6 +35,11 @@ static inline Token peek(Parser *p, int i) {
 static void consume(Parser *p) {
     p->pos++;
     p->cur = peek(p, 0);
+}
+
+static void setPosTo(Parser *p, int i) {
+    p->cur = peek(p, i);
+    p->pos += i;
 }
 
 static inline bool accept(Parser *p, TokenType t) {
@@ -73,55 +68,66 @@ void parser_init(Parser *p, Scanner *s) {
 static AstNode* parseExpr(Parser *p);
 static AstNode* parseStat(Parser *p);
 
-static Ident* parseIdent(Parser *p) {
+static AstNode* parseIdent(Parser *p) {
     if (CUR != TOK_IDENT) {
-        PANIC("expected an identifier");
+        return NULL;
     }
     Ident *n = (Ident*)newNode(NODE_IDENT);
     n->name = p->cur.val_str;
     consume(p);
-    return n;
+    return (AstNode*)n;
 }
 
-static BasicLit* parseBasicLit(Parser *p) {
+static AstNode* parseBasicLit(Parser *p) {
     if (!isLiteral(p->cur)) {
-        PANIC("expected a literal");
+        return NULL;
     }
     BasicLit *n = (BasicLit*)newNode(NODE_BASIC_LIT);
     n->tok = p->cur;
     consume(p);
-    return n;
+    return (AstNode*)n;
 }
 
-static UnaryExpr* parseUnaryExpr(Parser *p) {
-    // the only valid unary operator is '-'
-    if (CUR != TOK_SUB) {
-        PANIC("expected an unary operator");
+static bool isUnaryOp(Token tok) {
+    switch (tok.type) {
+        case TOK_ADD:
+        case TOK_SUB:
+            return true;
+        
+        default:
+            return false;
     }
+}
+
+static AstNode* parseUnaryExpr(Parser *p) {
+    if (!isUnaryOp(p->cur)) {
+        return NULL;
+    }
+    TokenType op = CUR;
     consume(p);
     AstNode *expr = parseExpr(p);
-    CHECK(expr);
+    if (!expr) {
+        setPosTo(p, -1);
+        return NULL;
+    }
     UnaryExpr *n = (UnaryExpr*)newNode(NODE_UNARY_EXPR);
-    n->op = CUR;
+    n->op = op;
     n->right = expr;
-    return n;
-}
-
-static BinaryExpr* parseBinaryExpr(Parser *p) {
-    AstNode *left = parseExpr(p);
-    CHECK(left);
-    AstNode *right = parseExpr(p);
-    CHECK(right);
-    // TODO: finish it
-}
-
-static AstNode* parseAssignStat(Parser *p) {
-    Ident *ident = parseIdent(p);
-    expect(p, TOK_ASSIGN);
-    AstNode *expr = parseExpr(p);
-    CHECK(expr);
-    AssignStat *n = (AssignStat*)newNode(NODE_ASSIGN_STAT);
-    n->ident = ident;
-    n->expr = expr;
     return (AstNode*)n;
+}
+
+static int getOpPrec(Token tok) {
+    switch (tok.type) {
+        case TOK_ADD:
+        case TOK_SUB:
+            return 1;
+            
+        case TOK_MUL:
+        case TOK_DIV:
+        case TOK_REM:
+            return 2;
+        
+        default:
+            return 0;
+    }
 }

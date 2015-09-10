@@ -16,9 +16,6 @@ typedef struct {
 AstNode* newNode(AstNodeType type);
 void freeNode(AstNode *node);
 
-typedef uchar OpPrec;
-OpPrec getOpPrec(TokenType t);
-
 void parser_init(Parser *p, Scanner *s);
 
 // placeholder
